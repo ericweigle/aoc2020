@@ -11,8 +11,7 @@ for filename in sys.argv[1:]:
 
   if len(data) < 100:
     # example
+    pass
   else:
     # real
-
-  target = get_target(preamble, data)
-  get_target2(target, data)
+    pass
