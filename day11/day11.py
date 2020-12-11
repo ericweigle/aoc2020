@@ -15,61 +15,58 @@ for filename in sys.argv[1:]:
   HEIGHT = len(data)
   WIDTH = len(data[0])
 
-  def adjacencies_pt1(x,y,query):
+  def adjacencies_pt1(row,col,query):
     count = 0
-    for i in (x-1,x,x+1):
-      for j in (y-1,y,y+1):
+    for r in (row-1,row,row+1):
+      for c in (col-1,col,col+1):
         try:
-          if (i==x and j==y) or i<0 or j<0 or i>=HEIGHT or j>=WIDTH:
+          if (r==row and c==col) or r<0 or c<0 or r>=HEIGHT or c>=WIDTH:
             continue
-          if data[i][j] == query:
+          if data[r][c] == query:
             count += 1
         except IndexError:
           pass
     return count
 
-  def adjacencies_pt2(x,y,query):
+  def adjacencies_pt2(row,col,query):
     count = 0
 
-    for d_i, d_j in [(-1, -1), (0, -1), (1, -1),
+    for d_r, d_c in [(-1, -1), (0, -1), (1, -1),
                      (-1,  0),          (1,  0),
                      (-1,  1), (0,  1), (1,  1)]:
-      i = x
-      j = y
+      r = row
+      c = col
       while True:
-        i += d_i
-        j += d_j
-        if i<0 or j<0 or i>=HEIGHT or j>=WIDTH:
+        r += d_r
+        c += d_c
+        if r<0 or c<0 or r>=HEIGHT or c>=WIDTH:
           break
-        if data[i][j] == 'L':
+        if data[r][c] == 'L':
           break
-        if data[i][j] == '#':
+        if data[r][c] == '#':
           count += 1
           break
     return count
 
   def automata(data):
     new_data = copy.deepcopy(data)
-    for x in range(len(data)):
-      for y in range(len(data[0])):
+    for row in range(len(data)):
+      for col in range(len(data[0])):
         ## If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
-        if data[x][y]=='L':
-          if adjacencies_pt2(x,y,'#')==0:
-            new_data[x][y]='#'
+        if data[row][col]=='L':
+          if adjacencies_pt2(row,col,'#')==0:
+            new_data[row][col]='#'
         ## If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
   
-        elif data[x][y]=='#':
-          if  adjacencies_pt2(x,y,'#')>=5: # 4 for part 1
-            new_data[x][y]='L'
+        elif data[row][col]=='#':
+          if  adjacencies_pt2(row,col,'#')>=5: # 4 for part 1
+            new_data[row][col]='L'
         ## Otherwise, the seat's state does not change.
     return new_data
 
-
   def total(data, query):
-    retval = 0
-    for row in data:
-      retval += sum([1 for x in row if x==query])
-    return retval
+    return sum(sum([1 for x in row if x==query])
+               for row in data)
 
   while True:
     new_data = automata(data)
