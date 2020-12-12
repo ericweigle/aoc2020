@@ -66,7 +66,7 @@ def part2():
     if action == 'L':
       action = 'R'
       amount = 360-amount
-    if action == 'R': # means to turn left the given number of degrees.
+    if action == 'R':
       while amount > 0:
         tmp = waypoint_north
         waypoint_north = -1*waypoint_east
